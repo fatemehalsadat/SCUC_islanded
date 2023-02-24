@@ -24,9 +24,8 @@ class HurricaneSCUC:
     def __init__(self, out_f,out_im_f,pvideo=True):
         self.out_f = out_f  # output folder
         self.out_im_f = out_im_f  # output folder
-    def clean_data(self,data0,data1):
+    def clean_data(self,data0):
         xlsload = pd.ExcelFile(data0)
-        xlsload1 = pd.ExcelFile(data1)
         
         Bus0 = pd.read_excel(xlsload, 'Bus',header=1).sort_values('Number',ignore_index=True).fillna(0)
         Bus1 = Bus0[['Number','Load MW','Gen MW','Zone Num']].to_numpy()
@@ -65,11 +64,10 @@ class HurricaneSCUC:
         
         Line0 = pd.read_excel(xlsload, 'Branch',header=1).fillna(0)
         Line1 = Line0[['From Number','To Number','B','X','Lim MVA A']].to_numpy()
-        Line11 = Line0.copy()
         #                  0             1        2   3      4           
         #data from civil engineering
         
-        Brnch0 = pd.read_excel(xlsload1, 'Brnaches State',header=0).fillna(0)
+        Brnch0 = pd.read_excel(xlsload, 'Branch state',header=1).fillna(0)
         Brnch1 = Brnch0[['From Number','To Number']].to_numpy()
         
         Brnch2 = np.zeros((len(Brnch1),6))  # [Line num,from bus,to bus,B,X,thermal limit]
@@ -77,14 +75,9 @@ class HurricaneSCUC:
         Brnch2[:,1:3] = Brnch1  # from bus,to bus
         #,B,X,thermal limit
         for i in range(0,len(Brnch1)):
-            tmp_b = np.where((Brnch1[i,0]==Line1[:,0])&(Brnch1[i,1]==Line1[:,1]))[0]
-            if len(tmp_b)>1:
-                Brnch2[i,[3,5]] = Line1[tmp_b,[2,4]]
-                Brnch2[i,4] = -1/Line1[tmp_b,3]
-                Line11[tmp_b[0],0:2] = np.nan
-            else:    
-                Brnch2[i,[3,5]] = Line1[tmp_b,[2,4]]
-                Brnch2[i,4] = -1/Line1[tmp_b,3]
+            tmp_b = np.where((Brnch1[i,0]==Line1[:,0])&(Brnch1[i,1]==Line1[:,1]))[0][0]
+            Brnch2[i,[3,5]] = Line1[tmp_b,[2,4]]
+            Brnch2[i,4] = -1/Line1[tmp_b,3]
         
         # [Line num,from bus,to bus,B,X,thermal limit]
         # [   0,      1,       2,   3,4,    5] 
