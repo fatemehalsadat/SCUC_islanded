@@ -18,7 +18,6 @@ PH = Hrcn_SCUC.HurricaneSCUC('Result_ps','Images_ps')
     
 Alfa = float(0.000001)
 Power_system = '2K system_full.xlsx'
-civil_system = 'Inf_GIS.xlsx'
 Load_factor = 'loadfactor.txt'
 TIme0 = np.array(range(0,72)) #the hours for this network configuration
 
@@ -48,7 +47,7 @@ item = 'AR5_'+str(algrthm)+str(FO)+'.xlsx'
 item_lsh = 'LS5_'+str(algrthm)+str(FO)+'.xlsx'
  
 
-Bus, Line, Gen, Key = PH.clean_data(Power_system,civil_system) #basis bus, line and Gen data, Key is the bus numbers in the original bus data (e.g. 8230)
+Bus, Line, Gen, Key = PH.clean_data(Power_system) #basis bus, line and Gen data, Key is the bus numbers in the original bus data (e.g. 8230)
 
 Load_fact_0 = np.loadtxt(Load_factor) #load factor data for 24 hours
     
