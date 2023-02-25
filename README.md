@@ -1,2 +1,2 @@
 # SCUC_islanded
-Security Constrained Unit Commitment in islnaded conditions
+Solves Security Constrained Unit Commitment in islnaded conditions with changing topology.
